@@ -1,59 +1,35 @@
-# Fossify Calendar
-<img alt="Logo" src="graphics/icon.webp" width="120" />
+# Rosenweg Kalender
 
-<a href='https://play.google.com/store/apps/details?id=org.fossify.calendar'><img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png' height=80/></a> <a href="https://f-droid.org/packages/org.fossify.calendar/"><img src="https://fdroid.gitlab.io/artwork/badge/get-it-on-en.svg" alt="Get it on F-Droid" height=80/></a> <a href="https://apt.izzysoft.de/fdroid/index/apk/org.fossify.calendar"><img src="https://gitlab.com/IzzyOnDroid/repo/-/raw/master/assets/IzzyOnDroid.png" alt="Get it on IzzyOnDroid" height=80/></a>
+Kalender für die Smartphones der Siedlung Rosenweg in Kaiseraugst. Funktional ist es der Kalender von Fossify; angepasst sind Name, Paketname, das rote Rosenweg-Symbol und das Verhalten auf den geteilten Rosenweg-Telefonen. Spenden-, Store- und Rückmeldekanäle des Originals sind entfernt.
 
-Your Private & Powerful Schedule Planner
+## Im Rosenweg
 
-Tired of cluttered calendars and privacy concerns?
+- **Einstellungen pro Person:** Auf geteilten Telefonen gehören die Einstellungen der angemeldeten Person. Sie liegen (über Rosenweg Gerät) auf der Telefonanlage und sind nach dem Anmelden an jedem geteilten Telefon wieder da. Ohne Rosenweg Gerät bleiben sie wie gewohnt auf dem Handy.
+- **Rosenweg Updater:** Auf Handys ohne Rosenweg Gerät prüft die App den App-Katalog der Telefonanlage und bietet Aktualisierungen für alle installierten Rosenweg-Apps an. Jede APK wird vorher geprüft (Prüfsumme, Paketname, Version, Rosenweg-Signatur); Android lässt jede Installation bestätigen. Auf geteilten Telefonen übernimmt das Rosenweg Gerät.
 
-Fossify Calendar is here to change that. Your open-source powerhouse for managing life, designed with privacy as its core and packed with powerful features to keep you organized.
+## Installation
 
-Here's what makes Fossify Calendar different:
+- **Geteilte Rosenweg-Telefone:** Rosenweg Gerät installiert die App automatisch aus dem App-Katalog der Telefonanlage und hält sie aktuell.
+- **Eigenes Handy:** APK von [www.rosenweg4303.ch/apps](https://www.rosenweg4303.ch/apps) herunterladen und installieren. Danach hält der Rosenweg Updater die Rosenweg-Apps aktuell.
 
-**🚫 AD-FREE AND PRIVATE:**  
-Your events remain yours. No ads, no tracking, no intrusive permissions.
+Die App gibt es nicht im Play Store und nicht auf F-Droid. Sie ist mit dem Rosenweg-Schlüssel signiert; Fassungen anderer Herkunft lassen sich nicht darüber installieren.
 
-**⏰ FLEXIBLE AND CUSTOMIZABLE:**  
-Craft events precisely with times, durations, reminders, and advanced repetition rules.
+## Bauen
 
-**🔄 SEAMLESS SYNCING:**  
-Sync effortlessly with Google Calendar, Outlook, Nextcloud, Exchange, and more.
+Die App baut gegen den Rosenweg-Fork der Fossify Commons und die Rosenweg-Module `cloud`/`updater` (`ch.rosenweg4303:*`). Diese kommen aus dem lokalen Maven-Repository (`mavenLocal()`), also zuerst [commons-rosenweg](https://github.com/Rosenweg/commons-rosenweg) veröffentlichen:
 
-**🎨 PERSONALIZE YOUR PLANNER:**  
-Set custom sounds, looping audio streams, vibrations, and themes to match your preferences.
+```bash
+# in commons-rosenweg, Zweig rosenweg
+./gradlew -PVERSION=7.1.3-rosenweg.1 publishToMavenLocal
 
-**🌈 VIBRANT WIDGETS:**  
-Brighten your day with beautiful calendar widgets and themes for your home screen.
+# in diesem Repo, Zweig rosenweg
+./gradlew assembleFossRelease
+```
 
-**📅 EFFORTLESS DAY MANAGEMENT:**  
-Plan your day with ease, whether you're a busy professional or a family organizer.
+Die APK liegt danach unter `app/build/outputs/apk/foss/release/`. Signiert wird mit `keystore.properties` (Vorlage: `keystore.properties_sample`); die Datei und der Schlüssel liegen nicht im Repo. Paketname: `ch.rosenweg4303.calendar`.
 
-**🎉 IMPORT CELEBRATIONS:**  
-Never miss a birthday or anniversary! Easily import holidays and special dates.
+## Herkunft und Lizenz
 
-**🔍 FILTER VIEWS:**  
-Quickly find what you're looking for with event filters.
+Fork von [Fossify Calendar](https://github.com/FossifyOrg/Calendar). Der Zweig `main` folgt dem Original, die Rosenweg-Anpassungen liegen im Zweig `rosenweg`. Herzlichen Dank an das Fossify-Team und alle Mitwirkenden für die solide Grundlage.
 
-**📆 MULTIPLE VIEWS:**  
-Switch between daily, weekly, monthly, yearly, and event views effortlessly.
-
-**✨ MATERIAL DESIGN ELEGANCE:**  
-Enjoy an intuitive and user-friendly interface with dynamic themes.
-
-**Plus, Fossify Calendar is open-source!**
-
-Join the vibrant community on GitHub, contribute to the project, and make it uniquely yours.
-
-Download Fossify Calendar now and experience the power of a private and customizable schedule.
-
-➡️ Explore more Fossify apps: https://www.fossify.org<br>
-➡️ Open-Source Code: https://www.github.com/FossifyOrg<br>
-➡️ Join the community on Reddit: https://www.reddit.com/r/Fossify<br>
-➡️ Connect on Telegram: https://t.me/Fossify
-
-<div align="center">
-<img alt="App image" src="fastlane/metadata/android/en-US/images/phoneScreenshots/1_en-US.png" width="30%">
-<img alt="App image" src="fastlane/metadata/android/en-US/images/phoneScreenshots/2_en-US.png" width="30%">
-<img alt="App image" src="fastlane/metadata/android/en-US/images/phoneScreenshots/4_en-US.png" width="30%">
-</div>
+Lizenz: GNU General Public License v3.0, siehe [LICENSE](LICENSE).
