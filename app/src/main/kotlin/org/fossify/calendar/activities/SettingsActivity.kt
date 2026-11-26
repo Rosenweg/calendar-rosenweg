@@ -204,6 +204,7 @@ class SettingsActivity : SimpleActivity() {
         setupUseSameSnooze()
         setupLoopReminders()
         setupSnoozeTime()
+        setupNextcloud()
         setupCaldavSync()
         setupManageSyncedCalendars()
         setupDefaultStartTime()
@@ -355,6 +356,33 @@ class SettingsActivity : SimpleActivity() {
         settingsAllowCreatingTasksHolder.setOnClickListener {
             settingsAllowCreatingTasks.toggle()
             config.allowCreatingTasks = settingsAllowCreatingTasks.isChecked
+        }
+    }
+
+    /**
+     * Rosenweg: Kalender der Rosenweg-Nextcloud (CalDAV direkt, commons-rosenweg). Anmelden ueber die
+     * Seite "Rosenweg-Nextcloud" (auf dem eigenen Handy mit dem Anmeldeschirm: Karte oder Konto).
+     */
+    private fun setupNextcloud() = binding.apply {
+        val konto = ch.rosenweg4303.cloud.KontoSpeicher(this@SettingsActivity).laden()
+        settingsNextcloud.text = if (konto == null) getString(R.string.rw_nextcloud_aus) else getString(R.string.rw_nextcloud_an, konto.benutzer)
+        settingsNextcloudHolder.setOnClickListener {
+            handlePermission(PERMISSION_WRITE_CALENDAR) { schreiben ->
+                if (!schreiben) return@handlePermission
+                handlePermission(PERMISSION_READ_CALENDAR) { lesen ->
+                    if (!lesen) return@handlePermission
+                    startActivity(
+                        android.content.Intent(this@SettingsActivity, ch.rosenweg4303.cloud.AnmeldenActivity::class.java)
+                            .putExtra(ch.rosenweg4303.cloud.AnmeldenActivity.EXTRA_BESCHREIBUNG, org.fossify.calendar.helpers.RosenwegNextcloud.BESCHREIBUNG)
+                    )
+                }
+            }
+        }
+        // zurueck von der Anmeldung (oder Abmeldung): gleich abgleichen
+        org.fossify.calendar.helpers.RosenwegNextcloud.abgleichen(this@SettingsActivity, sofort = true) {
+            settingsCaldavSync.isChecked = config.caldavSync
+            settingsManageSyncedCalendarsHolder.beVisibleIf(config.caldavSync)
+            settingsCaldavPullToRefreshHolder.beVisibleIf(config.caldavSync)
         }
     }
 
