@@ -18,6 +18,7 @@
     <ID>ComplexCondition:TaskActivity.kt$TaskActivity$day == MONDAY_BIT || day == TUESDAY_BIT || day == WEDNESDAY_BIT || day == THURSDAY_BIT || day == FRIDAY_BIT || day == SATURDAY_BIT || day == SUNDAY_BIT</ID>
     <ID>ComplexCondition:WeekFragment.kt$WeekFragment$doesEventFit &amp;&amp; (!isRepeatingOverlappingEvent || isAllDayEvent || isRowValidForEvent)</ID>
     <ID>ConstructorParameterNaming:Task.kt$Task$@ColumnInfo(name = "task_id") var task_id: Long</ID>
+    <ID>CyclomaticComplexMethod:AnlageEinstellungen.kt$AnlageEinstellungen$private fun senden(ctx: Context, prefs: SharedPreferences)</ID>
     <ID>CyclomaticComplexMethod:CalDAVHelper.kt$CalDAVHelper$@SuppressLint("MissingPermission") private fun fetchCalDAVCalendarEvents( calendar: CalDAVCalendar, localCalendarId: Long, showToasts: Boolean, )</ID>
     <ID>CyclomaticComplexMethod:Context.kt$@SuppressLint("NewApi") fun Context.getNotification( pendingIntent: PendingIntent, event: Event, content: String, publicVersion: Boolean = false ): Notification?</ID>
     <ID>CyclomaticComplexMethod:Context.kt$fun Context.notifyEvent(originalEvent: Event)</ID>
@@ -80,6 +81,7 @@
     <ID>LongMethod:MyTimeZones.kt$fun getAllTimeZones()</ID>
     <ID>LongMethod:WeekFragment.kt$WeekFragment$private fun addEvents(events: ArrayList&lt;Event&gt;)</ID>
     <ID>LongParameterList:SelectCalendarDialog.kt$SelectCalendarDialog$( val activity: Activity, val currCalendar: Long, val showCalDAVCalendars: Boolean, val showNewCalendarOption: Boolean, val addLastUsedOneAsFirstOption: Boolean, val showOnlyWritable: Boolean, var showManageCalendars: Boolean, val callback: (calendar: CalendarEntity) -&gt; Unit )</ID>
+    <ID>LoopWithTooManyJumpStatements:AnlageEinstellungen.kt$AnlageEinstellungen$for</ID>
     <ID>LoopWithTooManyJumpStatements:IcsImporter.kt$IcsImporter$while</ID>
     <ID>LoopWithTooManyJumpStatements:ManageCalendarsAdapter.kt$ManageCalendarsAdapter$for</ID>
     <ID>LoopWithTooManyJumpStatements:WeekFragment.kt$WeekFragment$do</ID>
@@ -407,6 +409,7 @@
     <ID>SwallowedException:MainActivity.kt$MainActivity$e: Exception</ID>
     <ID>SwallowedException:SettingsActivity.kt$SettingsActivity$e: ActivityNotFoundException</ID>
     <ID>TooGenericExceptionCaught:Activity.kt$e: Exception</ID>
+    <ID>TooGenericExceptionCaught:AnlageEinstellungen.kt$AnlageEinstellungen$e: Exception</ID>
     <ID>TooGenericExceptionCaught:CalDAVHelper.kt$CalDAVHelper$e: Exception</ID>
     <ID>TooGenericExceptionCaught:Context.kt$e: Exception</ID>
     <ID>TooGenericExceptionCaught:Converters.kt$Converters$e: Exception</ID>
