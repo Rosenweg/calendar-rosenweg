@@ -308,6 +308,7 @@
     <ID>MaxLineLength:ListSectionDay.kt$ListSectionDay : ListItem</ID>
     <ID>MaxLineLength:MainActivity.kt$MainActivity$// private contacts are created in Simple Contacts Pro, so we can guarantee that they exist only in these 2 formats</ID>
     <ID>MaxLineLength:MainActivity.kt$MainActivity$if</ID>
+    <ID>MaxLineLength:MainActivity.kt$MainActivity$org.fossify.calendar.helpers.RosenwegNextcloud.abgleichen(this) { geaendert -&gt; if (geaendert) refreshViewPager() }</ID>
     <ID>MaxLineLength:MainActivity.kt$MainActivity$||</ID>
     <ID>MaxLineLength:MonthDayFragment.kt$MonthDayFragment$binding.monthDaySelectedDayLabel.text = Formatter.getDateFromCode(requireActivity(), mSelectedDayCode, false)</ID>
     <ID>MaxLineLength:MonthDayFragment.kt$MonthDayFragment$override</ID>
@@ -351,9 +352,13 @@
     <ID>MaxLineLength:ReminderWarningDialog.kt$ReminderWarningDialog$activity</ID>
     <ID>MaxLineLength:RepeatLimitTypePickerDialog.kt$RepeatLimitTypePickerDialog$class</ID>
     <ID>MaxLineLength:RepeatLimitTypePickerDialog.kt$RepeatLimitTypePickerDialog$private</ID>
+    <ID>MaxLineLength:RosenwegNextcloud.kt$RosenwegNextcloud$a.eventsHelper.getCalendarWithCalDAVCalendarId(id)?.let { a.eventsHelper.deleteCalendars(arrayListOf(it), true) }</ID>
     <ID>MaxLineLength:SelectEventColorDialog.kt$SelectEventColorDialog$class</ID>
     <ID>MaxLineLength:SelectTimeZoneAdapter.kt$SelectTimeZoneAdapter$class</ID>
+    <ID>MaxLineLength:SettingsActivity.kt$SettingsActivity$.</ID>
     <ID>MaxLineLength:SettingsActivity.kt$SettingsActivity$IcsExporter.ExportResult.EXPORT_PARTIAL -&gt; org.fossify.commons.R.string.exporting_some_entries_failed</ID>
+    <ID>MaxLineLength:SettingsActivity.kt$SettingsActivity$android.content.Intent(this@SettingsActivity, ch.rosenweg4303.cloud.AnmeldenActivity::class.java)</ID>
+    <ID>MaxLineLength:SettingsActivity.kt$SettingsActivity$settingsNextcloud.text = if (konto == null) getString(R.string.rw_nextcloud_aus) else getString(R.string.rw_nextcloud_an, konto.benutzer)</ID>
     <ID>MaxLineLength:SettingsActivity.kt$SettingsActivity$settingsUseEnglishHolder.beVisibleIf((config.wasUseEnglishToggled || Locale.getDefault().language != "en") &amp;&amp; !isTiramisuPlus())</ID>
     <ID>MaxLineLength:SettingsActivity.kt$SettingsActivity$}</ID>
     <ID>MaxLineLength:SimpleActivity.kt$SimpleActivity$// caldav refresh content observer triggers multiple times in a row at updating, so call the callback only a few seconds after the (hopefully) last one</ID>
@@ -419,6 +424,7 @@
     <ID>TooGenericExceptionCaught:IcsImporter.kt$IcsImporter$e: Exception</ID>
     <ID>TooGenericExceptionCaught:MainActivity.kt$MainActivity$e: Exception</ID>
     <ID>TooGenericExceptionCaught:ReminderWarningDialog.kt$ReminderWarningDialog$e: Exception</ID>
+    <ID>TooGenericExceptionCaught:RosenwegNextcloud.kt$RosenwegNextcloud$e: Exception</ID>
     <ID>TooGenericExceptionCaught:SettingsActivity.kt$SettingsActivity$e: Exception</ID>
     <ID>TooManyFunctions:CalDAVHelper.kt$CalDAVHelper</ID>
     <ID>TooManyFunctions:Context.kt$org.fossify.calendar.extensions.Context.kt</ID>
