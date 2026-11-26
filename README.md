@@ -1,42 +1,175 @@
-# Rosenweg Kalender
+<p align="center"><img src="assets/logo/rosenweg-kalender-512.png" width="96" alt="Logo"></p>
+<h1 align="center">Rosenweg Kalender</h1>
+<p align="center">Kalender für die Rosenweg-Smartphones – für alle in der Siedlung.</p>
+<p align="center"><a href="https://www.rosenweg4303.ch/apps">Herunterladen</a> · <a href="docs/anleitung.md">Anleitung</a></p>
+
+## Inhalt
+
+- [Überblick](#überblick)
+- [Plattformen](#plattformen)
+- [Anmeldung](#anmeldung)
+- [Rechte und Gruppen](#rechte-und-gruppen)
+- [Bedienung](#bedienung)
+- [Geteilte Rosenweg-Telefone](#geteilte-rosenweg-telefone)
+- [Installation und Updates](#installation-und-updates)
+- [Aufbau](#aufbau)
+- [Bauen](#bauen)
+- [CI und Release](#ci-und-release)
+- [Konfiguration](#konfiguration)
+- [Zweige](#zweige)
+- [Herkunft und Lizenz](#herkunft-und-lizenz)
+
+## Überblick
 
 Kalender für die Smartphones der Siedlung Rosenweg in Kaiseraugst. Funktional ist es der Kalender von Fossify; angepasst sind Name, Paketname, das Rosenweg-Logo und das Verhalten auf den geteilten Rosenweg-Telefonen. Spenden-, Store- und Rückmeldekanäle des Originals sind entfernt.
 
-## Im Rosenweg
+Was die App kann:
 
-- **Einstellungen pro Person:** Auf geteilten Telefonen gehören die Einstellungen der angemeldeten Person. Sie liegen (über Rosenweg Gerät) auf der Telefonanlage und sind nach dem Anmelden an jedem geteilten Telefon wieder da. Ohne Rosenweg Gerät bleiben sie wie gewohnt auf dem Handy.
-- **Rosenweg Updater:** Auf Handys ohne Rosenweg Gerät prüft die App den App-Katalog der Telefonanlage und bietet Aktualisierungen für alle installierten Rosenweg-Apps an. Jede APK wird vorher geprüft (Prüfsumme, Paketname, Version, Rosenweg-Signatur); Android lässt jede Installation bestätigen. Auf geteilten Telefonen übernimmt das Rosenweg Gerät.
-- **Logo:** Rosenweg-Wappen (Turm, Weg, Rose auf Rot) mit dem Zeichen der App rechts unten, erzeugt mit dem Logo-Baukasten aus rosenweg-basis; dazu ein monochromes Designsymbol (Android 13+). Die wählbaren Symbolfarben von Fossify gibt es nicht mehr: alle zeigen dasselbe Rosenweg-Symbol.
+- **Termine:** eintragen, wiederholen, mit Erinnerung.
+- **Ansichten:** Tag, Woche, Monat, Jahr und Liste.
+- **Geburtstage:** aus Rosenweg Kontakte übernehmen.
+- **Ohne Ablenkung:** keine Spenden-, Store- und Rückmeldehinweise.
+- **Einstellungen pro Person:** auf geteilten Telefonen gehören sie der angemeldeten Person.
+- **Rosenweg-Nextcloud:** die eigenen Kalender direkt per CalDAV, Änderungen gehen zurück (PR #6).
+- **Rosenweg Updater:** hält auf dem eigenen Handy alle Rosenweg-Apps aktuell.
 
-## Installation
+## Plattformen
 
-- **Geteilte Rosenweg-Telefone:** Rosenweg Gerät installiert die App automatisch aus dem App-Katalog der Telefonanlage und hält sie aktuell.
-- **Eigenes Handy:** APK von [www.rosenweg4303.ch/apps](https://www.rosenweg4303.ch/apps) herunterladen und installieren. Danach hält der Rosenweg Updater die Rosenweg-Apps aktuell.
+| Plattform | Stand |
+|---|---|
+| Android | ja, APK auf [rosenweg4303.ch/apps](https://www.rosenweg4303.ch/apps) |
+| Geteilte Rosenweg-Telefone | ja, über den App-Katalog auf /smartphones |
+| iOS, Desktop | nein (Android-App aus dem Fossify-Projekt) |
 
-Die App gibt es nicht im Play Store und nicht auf F-Droid. Sie ist mit dem Rosenweg-Schlüssel signiert; Fassungen anderer Herkunft lassen sich nicht darüber installieren.
+Nicht im Play Store und nicht auf F-Droid.
+
+## Anmeldung
+
+Die App braucht eine Anmeldung; ohne Anmeldung ist sie nicht nutzbar.
+
+| Wo | Wie |
+|---|---|
+| Eigenes Handy | Beim Öffnen kommt der gemeinsame Anmeldeschirm aus [commons-rosenweg](https://github.com/Rosenweg/commons-rosenweg) (sieht aus wie der Sperrbildschirm der geteilten Telefone): **Rosenweg-Karte** hinten ans Telefon halten (NFC) oder **„Mit Rosenweg-Konto anmelden“** im Browser. Kein PIN. |
+| Geteilte Rosenweg-Telefone | Es gilt die Anmeldung von Rosenweg Gerät (Karte am Sperrbildschirm, dort mit PIN). Kein eigener Anmeldeschirm. |
+
+| Regel | Was gilt |
+|---|---|
+| Sitzung je App | Jede App hat ihre eigene Sitzung; Abmelden betrifft nur diese App. |
+| Höchstens 20 Sitzungen | aktive Sitzungen je Person; die Technik sieht und widerruft jede einzeln. |
+| Karte entzogen | Die Sitzung endet beim nächsten Erneuern. |
+| Was die Anmeldung bringt | Kalender der Rosenweg-Nextcloud direkt per CalDAV; Aufruf über Einstellungen → „Rosenweg-Nextcloud“. Abgemeldet: die Daten verschwinden vom Gerät und bleiben auf dem Server. |
+
+Stand: Anschluss an die Rosenweg-Nextcloud kommt mit PR #6 (Zweig `nextcloud-dav`); der Anmeldeschirm steckt im Modul `cloud` von commons-rosenweg (`RosenwegAnmeldeSchirm`, Server: Rosenweg/Website `api/routes/app-karte.js`).
+
+## Rechte und Gruppen
+
+Die App hat keine eigenen Rollen. Wer sie auf den geteilten Telefonen bekommt, legt der App-Katalog der Telefonanlage fest.
+
+| Wer | darf |
+|---|---|
+| Technik | legt die App im Katalog auf /smartphones an, wählt die Gruppen, schaltet sie aktiv; kann Apps auf den geteilten Telefonen ausblenden |
+| Angemeldete Person in einer der Gruppen des Katalog-Eintrags (leer = alle) | sieht die App auf dem geteilten Telefon; Einstellungen gehören ihr |
+| Personen mit Rosenweg-Konto oder Rosenweg-Karte | auf dem eigenen Handy nach der Anmeldung (APK von /apps) |
+
+## Bedienung
+
+| Was | So geht’s |
+|---|---|
+| Termin eintragen | Plus-Knopf unten rechts, oder lange auf einen Tag drücken |
+| Ansicht wechseln | Symbol oben in der Leiste (Tag, Woche, Monat, Jahr, Liste) |
+| Heute | Symbol „Heute“ oben |
+| Erinnerungen, Feiertage, Geburtstage | Menü → Einstellungen |
+
+Ausführlich: [docs/anleitung.md](docs/anleitung.md).
+
+## Geteilte Rosenweg-Telefone
+
+Auf den geteilten Telefonen (mit Rosenweg Gerät, Anmeldung per Karte am Sperrbildschirm) arbeitet die App für die Person, die gerade angemeldet ist. Der Weg zur Anlage führt über Rosenweg Gerät; die App selbst braucht dafür kein Netz und sieht kein Token.
+
+| Thema | Verhalten |
+|---|---|
+| Einstellungen pro Person | Nach dem Anmelden holt die App die Einstellungen der Person von der Telefonanlage; ist die Fassung dort neuer, gilt sie, sonst geht die hiesige hoch. Jede Änderung geht kurz danach hoch. Gerätebezogenes (Pfade, Zähler, Hinweise, PIN) bleibt auf dem Gerät. |
+| Updates | Rosenweg Gerät installiert die App aus dem App-Katalog und hält sie aktuell. |
+| Ohne Rosenweg Gerät | die Einstellungen bleiben auf dem Handy. |
+
+Voraussetzung: die Rosenweg-Signatur. Rosenweg Gerät beantwortet Anfragen nur von Apps mit seiner Signatur (`ch.rosenweg4303.permission.ANLAGE`).
+
+## Installation und Updates
+
+| Wo | Wie |
+|---|---|
+| Geteilte Rosenweg-Telefone | Rosenweg Gerät installiert die App automatisch aus dem App-Katalog der Telefonanlage und hält sie aktuell. |
+| Eigenes Handy | APK von [rosenweg4303.ch/apps](https://www.rosenweg4303.ch/apps) herunterladen und installieren. Danach hält der Rosenweg Updater die Rosenweg-Apps aktuell. |
+
+**Rosenweg Updater:** Auf Handys ohne Rosenweg Gerät prüft die App den App-Katalog der Telefonanlage und bietet Aktualisierungen für alle installierten Rosenweg-Apps an. Jede APK wird vorher geprüft (Prüfsumme, Paketname, Version, Rosenweg-Signatur); Android lässt jede Installation bestätigen.
+
+Die App ist mit dem Rosenweg-Schlüssel signiert; Fassungen anderer Herkunft lassen sich nicht darüber installieren.
+
+## Aufbau
+
+Fossify-Code mit wenigen, markierten Rosenweg-Stellen (Kommentar „Rosenweg“). Der Kotlin-Namensraum bleibt `org.fossify.…`, nur die applicationId ist eigen: `ch.rosenweg4303.calendar`. Kotlin-Dateien unten relativ zu `app/src/main/kotlin/org/fossify/calendar/`.
+
+| Teil | Inhalt |
+|---|---|
+| `helpers/AnlageEinstellungen.kt` | Einstellungen pro Person über Rosenweg Gerät (`content://ch.rosenweg4303.telefon.anlage`, Server `/api/telefon/einstellungen`) |
+| `activities/MainActivity.kt` | ruft beim Start den Abgleich auf |
+| `app/src/main/AndroidManifest.xml` | Berechtigung `ch.rosenweg4303.permission.ANLAGE`, Empfänger für An-/Abmelden (nur Rosenweg-Signatur); kennt Rosenweg Kontakte (`ch.rosenweg4303.contacts`) als Kontakte-App |
+| `scripts/` | Feiertags-Generator aus dem Original |
+| `ch.rosenweg4303:updater` | Rosenweg Updater (aus commons-rosenweg) |
+| Commons `7.1.3-rosenweg.1` | Rosenweg-Fork der Fossify Commons, aus `mavenLocal()` (`gradle/libs.versions.toml`, `settings.gradle.kts`) |
+| `assets/logo/` | Logo aus dem Baukasten von rosenweg-basis: Turm, Weg und Rose mit dem Zeichen der App; dazu monochromes Designsymbol (Android 13+). Neu erzeugen: `sh assets/logo/erzeugen.sh` |
+| `app/src/main/res/`: `values/rosenweg_icon.xml`, `mipmap-anydpi-v26/ic_launcher.xml` | ein einziges Rosenweg-Symbol statt der wählbaren Fossify-Symbolfarben |
+| `fastlane/` | Store-Texte und Bilder des Originals (nicht verwendet) |
 
 ## Bauen
 
-Die App baut gegen den Rosenweg-Fork der Fossify Commons und die Rosenweg-Module `cloud`/`updater` (`ch.rosenweg4303:*`). Diese kommen aus dem lokalen Maven-Repository (`mavenLocal()`), also zuerst [commons-rosenweg](https://github.com/Rosenweg/commons-rosenweg) veröffentlichen:
+Die App baut gegen den Rosenweg-Fork der Fossify Commons und die Rosenweg-Module `cloud`/`updater` (`ch.rosenweg4303:*`). Diese kommen aus dem lokalen Maven-Repository, also zuerst [commons-rosenweg](https://github.com/Rosenweg/commons-rosenweg) veröffentlichen:
 
 ```bash
-# in commons-rosenweg, Zweig rosenweg
+# in commons-rosenweg (Zweig main)
 ./gradlew -PVERSION=7.1.3-rosenweg.1 publishToMavenLocal
 
-# in diesem Repo, Zweig rosenweg
+# in diesem Repo (Zweig main)
 ./gradlew assembleFossRelease
 ```
 
-Die APK liegt danach unter `app/build/outputs/apk/foss/release/`. Signiert wird mit `keystore.properties` (Vorlage: `keystore.properties_sample`); die Datei und der Schlüssel liegen nicht im Repo. Paketname: `ch.rosenweg4303.calendar`.
+Die APK liegt danach unter `app/build/outputs/apk/foss/release/`. Signiert wird mit `keystore.properties` (siehe [Konfiguration](#konfiguration)).
 
-Logo neu erzeugen (aus dem Repo-Wurzelverzeichnis, rosenweg-basis daneben): `sh assets/logo/erzeugen.sh`. Welches Zeichen die App trägt, steht in rosenweg-basis `werkzeug/logo/android-apps.txt`.
+Logo neu erzeugen (rosenweg-basis als Nachbarordner): `sh assets/logo/erzeugen.sh`. Welches Zeichen die App trägt, steht in rosenweg-basis `werkzeug/logo/android-apps.txt`.
 
-## Neue Version
+Mehr: [docs/entwickeln.md](docs/entwickeln.md).
 
-APK wie oben bauen und signieren, dann `gh release create v<versionName> <datei.apk> --notes "Was ist neu"` (Tag = versionName der APK, eine APK je Release). Der Workflow `.github/workflows/apps.yml` (wiederverwendbarer Workflow `apps-release.yml` aus Rosenweg/Website) schickt sie an [www.rosenweg4303.ch/apps](https://www.rosenweg4303.ch/apps) und in den App-Katalog der Telefonanlage; damit bekommen sie die geteilten Telefone und der Rosenweg Updater. Anmeldung per GitHub-OIDC, kein gespeichertes Geheimnis; die Anlage prüft Tag, Prüfsumme, Rosenweg-Signatur und Paketnamen. Der Workflow liegt im Standardzweig `main`; `gh release create` ohne `--target` setzt den Tag dort hin. Erneut senden: `gh workflow run apps.yml --ref <tag>`.
+## CI und Release
+
+Gebaut und signiert wird lokal; die CI verteilt nur.
+
+| Schritt | Was passiert |
+|---|---|
+| APK bauen und signieren | lokal, wie unter [Bauen](#bauen) |
+| `gh release create v<versionName> <datei.apk> --notes "Was ist neu"` | Tag = versionName der APK, eine APK je Release; ohne `--target` landet der Tag auf `main` |
+| Workflow `.github/workflows/apps.yml` | ruft `apps-release.yml` aus Rosenweg/Website auf und schickt die APK an **[rosenweg4303.ch/apps](https://www.rosenweg4303.ch/apps)** und in den App-Katalog der Telefonanlage – damit bekommen sie die geteilten Telefone und der Rosenweg Updater |
+| Prüfung auf der Anlage | Anmeldung per GitHub-OIDC (kein gespeichertes Geheimnis); geprüft werden Repo, Tag, Prüfsumme, Rosenweg-Signatur und Paketname. Die App muss auf /smartphones schon angelegt sein. |
+| Erneut senden | `gh workflow run apps.yml --ref <tag>` |
+
+Die übrigen Workflows (`pr.yml`, `testing-build.yml`, `release.yml`, `update-commons.yml` …) stammen aus dem Original und rufen die Fossify-Vorlagen auf; der Play-Store-Release (`release.yml`) läuft nur bei einer Änderung an `.fossify/release-marker.txt`.
+
+Weg auf dem Server: Rosenweg/Website, `pbx/README.md`, Abschnitt „Seite /apps und App-Releases“.
+
+## Konfiguration
+
+| Wo | Was (nur Namen) |
+|---|---|
+| `gradle.properties` | `APP_ID` (`ch.rosenweg4303.calendar`), `VERSION_NAME`, `VERSION_CODE` |
+| `keystore.properties` (nicht im Repo, Vorlage `keystore.properties_sample`) | Pfad und Zugang zum Rosenweg-Signierschlüssel |
+| GitHub-Secrets | keine für den Weg nach /apps (OIDC) |
+| Server (Rosenweg/Website, PBX-API) | Katalog-Eintrag `ch.rosenweg4303.calendar` auf /smartphones (Gruppen, aktiv); Einstellungen je Person und Paket über `/api/telefon/einstellungen` |
+
+## Zweige
+
+`main` ist der Hauptzweig mit allen Rosenweg-Anpassungen; der frühere Arbeitszweig `rosenweg` ist darin gemergt. Neuerungen aus dem Original werden von [Fossify Calendar](https://github.com/FossifyOrg/Calendar) nach `main` übernommen.
 
 ## Herkunft und Lizenz
 
-Fork von [Fossify Calendar](https://github.com/FossifyOrg/Calendar). Der Zweig `main` folgt dem Original, die Rosenweg-Anpassungen liegen im Zweig `rosenweg`. Herzlichen Dank an das Fossify-Team und alle Mitwirkenden für die solide Grundlage.
+Basiert auf [Fossify Calendar](https://github.com/FossifyOrg/Calendar). Herzlichen Dank an das Fossify-Team und alle Mitwirkenden für die solide Grundlage.
 
-Lizenz: GNU General Public License v3.0, siehe [LICENSE](LICENSE).
+Lizenz: GNU General Public License v3.0 (GPL-3.0), siehe [LICENSE](LICENSE).
