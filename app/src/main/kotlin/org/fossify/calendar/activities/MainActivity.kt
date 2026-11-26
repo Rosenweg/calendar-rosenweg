@@ -305,6 +305,8 @@ class MainActivity : SimpleActivity(), RefreshRecyclerViewListener {
         if (config.caldavSync) {
             updateCalDAVEvents()
         }
+        // Rosenweg: Kalender der Rosenweg-Nextcloud abgleichen (hoechstens alle 10 Minuten)
+        org.fossify.calendar.helpers.RosenwegNextcloud.abgleichen(this) { geaendert -> if (geaendert) refreshViewPager() }
     }
 
     override fun onPause() {
