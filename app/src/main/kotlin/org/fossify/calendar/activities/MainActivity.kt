@@ -172,6 +172,8 @@ class MainActivity : SimpleActivity(), RefreshRecyclerViewListener {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
         appLaunched(org.fossify.calendar.BuildConfig.APPLICATION_ID)
+        // Rosenweg (Regel 7): Einstellungen der angemeldeten Person von der Anlage
+        org.fossify.calendar.helpers.AnlageEinstellungen.abgleichen(this) { recreate() }
         setupOptionsMenu()
         refreshMenuItems()
         setupEdgeToEdge(
