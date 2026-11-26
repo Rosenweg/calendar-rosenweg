@@ -255,6 +255,10 @@ class MainActivity : SimpleActivity(), RefreshRecyclerViewListener {
 
     override fun onResume() {
         super.onResume()
+        // Rosenweg (Stefan 26.11.2026): auf dem eigenen Handy ist die App ohne Anmeldung nicht nutzbar,
+        // es kommt der gemeinsame Anmeldeschirm (commons-rosenweg: Karte oder Rosenweg-Konto, "Zurueck"
+        // schliesst die App). Geteilte Telefone (Rosenweg Geraet): nie, dort gilt dessen Anmeldung.
+        if (ch.rosenweg4303.cloud.RosenwegAnmeldeSchirm.zeigenFallsNoetig(this, nextcloud = true)) return
         if (mStoredTextColor != getProperTextColor() || mStoredBackgroundColor != getProperBackgroundColor() || mStoredPrimaryColor != getProperPrimaryColor()
             || mStoredDayCode != Formatter.getTodayCode() || mStoredDimPastEvents != config.dimPastEvents || mStoredDimCompletedTasks != config.dimCompletedTasks
             || mStoredHighlightWeekends != config.highlightWeekends || mStoredHighlightWeekendsColor != config.highlightWeekendsColor
@@ -305,6 +309,8 @@ class MainActivity : SimpleActivity(), RefreshRecyclerViewListener {
         if (config.caldavSync) {
             updateCalDAVEvents()
         }
+        // Rosenweg: Kalender der Rosenweg-Nextcloud abgleichen (hoechstens alle 10 Minuten)
+        org.fossify.calendar.helpers.RosenwegNextcloud.abgleichen(this) { geaendert -> if (geaendert) refreshViewPager() }
     }
 
     override fun onPause() {
