@@ -258,7 +258,7 @@ class MainActivity : SimpleActivity(), RefreshRecyclerViewListener {
         // Rosenweg (Stefan 26.11.2026): auf dem eigenen Handy ist die App ohne Anmeldung nicht nutzbar,
         // es kommt der gemeinsame Anmeldeschirm (commons-rosenweg: Karte oder Rosenweg-Konto, "Zurueck"
         // schliesst die App). Geteilte Telefone (Rosenweg Geraet): nie, dort gilt dessen Anmeldung.
-        if (ch.rosenweg4303.cloud.RosenwegAnmeldeSchirm.zeigenFallsNoetig(this)) return
+        if (ch.rosenweg4303.cloud.RosenwegAnmeldeSchirm.zeigenFallsNoetig(this, nextcloud = true)) return
         if (mStoredTextColor != getProperTextColor() || mStoredBackgroundColor != getProperBackgroundColor() || mStoredPrimaryColor != getProperPrimaryColor()
             || mStoredDayCode != Formatter.getTodayCode() || mStoredDimPastEvents != config.dimPastEvents || mStoredDimCompletedTasks != config.dimCompletedTasks
             || mStoredHighlightWeekends != config.highlightWeekends || mStoredHighlightWeekendsColor != config.highlightWeekendsColor
