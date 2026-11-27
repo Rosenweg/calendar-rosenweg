@@ -213,5 +213,7 @@ class KalenderArbeit(c: Context, p: WorkerParameters) : DavArbeit(c, p) {
         applicationContext.hasPermission(PERMISSION_READ_CALENDAR)
     override fun lokalGeaendert() = KalenderAbgleich.lokalGeaendert(applicationContext)
     override fun abgleichen(konto: Konto) = RosenwegNextcloud.abgleichenJetzt(applicationContext, konto)
-    override fun abgemeldet() { RosenwegNextcloud.entfernen(applicationContext) }
+    // Im Hintergrund nie lokal loeschen: "kein Konto" kann auch heissen, dass Rosenweg Geraet gerade
+    // nicht antwortet. Aufgeraeumt wird beim naechsten Oeffnen der App.
+    override fun abgemeldet() { DavPlaner.abschalten(applicationContext, plan) }
 }
