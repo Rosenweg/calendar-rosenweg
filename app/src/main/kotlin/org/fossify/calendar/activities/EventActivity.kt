@@ -430,6 +430,12 @@ class EventActivity : SimpleActivity() {
             mStoredCalendars.firstOrNull { it.id == config.defaultCalendarId }?.id
                 ?: config.lastUsedLocalCalendarId
         }
+        // Rosenweg: keine lokalen Kalender - neue Termine in den Nextcloud-Standardkalender
+        if (event == null) {
+            org.fossify.calendar.helpers.RosenwegNextcloud
+                .standardStatt(this@EventActivity, mStoredCalendars, mCalendarId)
+                ?.let { mCalendarId = it }
+        }
 
         if (event != null) {
             mEvent = event
