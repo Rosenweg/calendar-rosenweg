@@ -179,6 +179,7 @@ class SettingsActivity : SimpleActivity() {
 
     private fun setupSettingItems() {
         setupCustomizeColors()
+        binding.settingsRwUpdatesHolder.setOnClickListener { ch.rosenweg4303.updater.RosenwegUpdater.jetztPruefen(this) }
         setupCustomizeNotifications()
         setupUseEnglish()
         setupLanguage()
