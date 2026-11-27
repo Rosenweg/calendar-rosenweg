@@ -151,7 +151,10 @@ object AnlageEinstellungen {
     /** Anmeldung am geteilten Telefon (Nachricht der Geraete-App): Einstellungen der Person sofort holen. */
     class Empfaenger : android.content.BroadcastReceiver() {
         override fun onReceive(c: Context, i: android.content.Intent) {
-            if (i.action == "ch.rosenweg4303.ANGEMELDET") abgleichen(c)
+            if (i.action == "ch.rosenweg4303.ANGEMELDET") {
+                abgleichen(c)
+                RosenwegNextcloud.anstossen(c)   // Kalender der neu angemeldeten Person holen
+            }
         }
     }
 }

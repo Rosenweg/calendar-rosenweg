@@ -44,6 +44,9 @@ class EventsHelper(val context: Context) {
             } catch (ignored: Exception) {
             }
 
+            // Rosenweg: nur die Nextcloud-Kalender (keine lokalen), sobald es welche gibt
+            calendars = RosenwegNextcloud.filtern(activity, calendars)
+
             if (showWritableOnly) {
                 val caldavCalendars = activity.calDAVHelper.getCalDAVCalendars("", true)
                 calendars = calendars.filter {

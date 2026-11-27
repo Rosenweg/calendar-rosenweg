@@ -360,12 +360,12 @@ class SettingsActivity : SimpleActivity() {
     }
 
     /**
-     * Rosenweg: Kalender der Rosenweg-Nextcloud (CalDAV direkt, commons-rosenweg). Anmelden ueber die
-     * Seite "Rosenweg-Nextcloud" (auf dem eigenen Handy mit dem Anmeldeschirm: Karte oder Konto).
+     * Rosenweg: Kalender der Rosenweg-Nextcloud (CalDAV direkt, commons-rosenweg). Der Eintrag zeigt
+     * den tatsaechlichen Stand (CloudStatus) und oeffnet die gemeinsame Seite "Rosenweg-Nextcloud"
+     * (nicht angemeldet: dort gleich der Anmeldeschirm). Dazu: Kalender verwalten, Abgleich-Protokoll.
      */
-    private fun setupNextcloud() = binding.apply {
-        val konto = ch.rosenweg4303.cloud.KontoSpeicher(this@SettingsActivity).laden()
-        settingsNextcloud.text = if (konto == null) getString(R.string.rw_nextcloud_aus) else getString(R.string.rw_nextcloud_an, konto.benutzer)
+    private fun setupNextcloud(): Unit = with(binding) {
+        settingsNextcloud.text = ch.rosenweg4303.cloud.CloudStatus.kurz(this@SettingsActivity)
         settingsNextcloudHolder.setOnClickListener {
             handlePermission(PERMISSION_WRITE_CALENDAR) { schreiben ->
                 if (!schreiben) return@handlePermission
@@ -378,11 +378,35 @@ class SettingsActivity : SimpleActivity() {
                 }
             }
         }
+        val verbunden = ch.rosenweg4303.cloud.KontoSpeicher(this@SettingsActivity).laden() != null
+        settingsNextcloudKalenderHolder.beVisibleIf(verbunden)
+        settingsNextcloudKalender.text = getString(R.string.rw_kalender_verwalten_text)
+        settingsNextcloudKalenderHolder.setOnClickListener {
+            org.fossify.calendar.dialogs.NextcloudKalenderDialog.zeigen(this@SettingsActivity) { setupNextcloud() }
+        }
+        val art = ch.rosenweg4303.cloud.dav.NextcloudDav.Art.KALENDER
+        val konflikte = ch.rosenweg4303.cloud.dav.AbgleichProtokoll(this@SettingsActivity, art)
+        val anzahl = konflikte.liste().size
+        settingsNextcloudProtokollHolder.beVisibleIf(verbunden || anzahl > 0)
+        settingsNextcloudProtokoll.text =
+            if (anzahl == 0) "Keine Konflikte" else "$anzahl Meldung(en), davon ${konflikte.konflikte()} Konflikt(e)"
+        settingsNextcloudProtokollHolder.setOnClickListener {
+            ch.rosenweg4303.cloud.dav.ProtokollAnsicht.zeigen(this@SettingsActivity, art, { e ->
+                val konto = ch.rosenweg4303.cloud.KontoSpeicher(applicationContext).laden() ?: return@zeigen false
+                ch.rosenweg4303.cloud.dav.DavArbeit.exklusiv(org.fossify.calendar.helpers.RosenwegNextcloud.PLAN.name) {
+                    val app = org.fossify.calendar.helpers.RosenwegNextcloud.APP
+                    ch.rosenweg4303.cloud.dav.KalenderAbgleich(applicationContext, konto, app).wiederherstellen(e)
+                        .also { org.fossify.calendar.helpers.RosenwegNextcloud.einbinden(applicationContext) }
+                }
+            }) { setupNextcloud() }
+        }
         // zurueck von der Anmeldung (oder Abmeldung): gleich abgleichen
         org.fossify.calendar.helpers.RosenwegNextcloud.abgleichen(this@SettingsActivity, sofort = true) {
+            settingsNextcloud.text = ch.rosenweg4303.cloud.CloudStatus.kurz(this@SettingsActivity)
             settingsCaldavSync.isChecked = config.caldavSync
             settingsManageSyncedCalendarsHolder.beVisibleIf(config.caldavSync)
             settingsCaldavPullToRefreshHolder.beVisibleIf(config.caldavSync)
+            updateDefaultCalendarText()
         }
     }
 
@@ -1052,7 +1076,9 @@ class SettingsActivity : SimpleActivity() {
                 currCalendar = config.defaultCalendarId,
                 showCalDAVCalendars = true,
                 showNewCalendarOption = false,
-                addLastUsedOneAsFirstOption = true,
+                // Rosenweg: mit Nextcloud immer ein fester Standardkalender (Vorgabe "Persönlich")
+                addLastUsedOneAsFirstOption =
+                    !org.fossify.calendar.helpers.RosenwegNextcloud.nurNextcloud(this@SettingsActivity),
                 showOnlyWritable = true,
                 showManageCalendars = false
             ) {
