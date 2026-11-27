@@ -51,23 +51,46 @@ object RosenwegNextcloud {
     val PLAN = DavPlaner.Plan("kalender", KalenderArbeit::class.java, listOf(CalendarContract.CONTENT_URI))
 
     @Volatile private var zuletzt = 0L
+    @Volatile private var gefragt = false
 
     private fun prefs(c: Context) = c.applicationContext.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
 
     /** Systemkalender-Ids (caldavCalendarId) der Nextcloud-Kalender, wie zuletzt eingebunden. */
     fun ids(c: Context): Set<Int> = prefs(c).getStringSet(IDS, emptySet())!!.mapNotNull { it.toIntOrNull() }.toSet()
 
-    /** Gibt es Nextcloud-Kalender? Dann zeigt die App keine lokalen Kalender. */
-    fun nurNextcloud(c: Context) = ids(c).isNotEmpty()
+    /**
+     * Die App zeigt nie lokale Kalender (Stefan: "Die App braucht keine lokalen Kalender") - auch
+     * nicht, solange die Nextcloud-Kalender noch nicht geladen sind.
+     */
+    @Suppress("UNUSED_PARAMETER", "FunctionOnlyReturningConstant")
+    fun nurNextcloud(c: Context) = true
+
+    /** Noch kein beschreibbarer Nextcloud-Kalender da (z.B. gleich nach der Anmeldung)? */
+    fun keinZiel(c: Context) = ids(c).none { beschreibbar(c, it) }
 
     private fun berechtigt(c: Context) =
         c.hasPermission(PERMISSION_WRITE_CALENDAR) && c.hasPermission(PERMISSION_READ_CALENDAR)
 
-    /** Beim Oeffnen: Hintergrund planen und (hoechstens alle 2 Minuten) gleich abgleichen; [fertig] im UI-Thread. */
+    /**
+     * Beim Oeffnen: direkt abgleichen (ohne WorkManager; hoechstens alle 2 Minuten, ohne
+     * Nextcloud-Kalender immer) und den Hintergrund planen. Fehlt die Kalender-Berechtigung, wird
+     * sie erfragt (Fossify fragte nur beim Einschalten von "CalDAV"). [fertig] im UI-Thread.
+     */
     fun abgleichen(a: Activity, sofort: Boolean = false, fertig: (Boolean) -> Unit = {}) {
-        if (!berechtigt(a)) return
+        if (!berechtigt(a)) {
+            val sa = a as? org.fossify.commons.activities.BaseSimpleActivity
+            if (sa == null || ch.rosenweg4303.cloud.KontoSpeicher(a).laden() == null || gefragt) return
+            gefragt = true
+            sa.handlePermission(PERMISSION_WRITE_CALENDAR) { schreiben ->
+                if (schreiben) {
+                    sa.handlePermission(PERMISSION_READ_CALENDAR) { lesen -> if (lesen) abgleichen(a, true, fertig) }
+                }
+            }
+            return
+        }
         DavPlaner.einrichten(a, PLAN)
-        if (!sofort && System.currentTimeMillis() - zuletzt < ABSTAND_MS) return
+        ensureBackgroundThread { lokaleAusblenden(a.applicationContext) }   // Room nicht im UI-Thread
+        if (!sofort && ids(a).isNotEmpty() && System.currentTimeMillis() - zuletzt < ABSTAND_MS) return
         zuletzt = System.currentTimeMillis()
         val app = a.applicationContext
         ensureBackgroundThread {
@@ -128,7 +151,7 @@ object RosenwegNextcloud {
     }
 
     /** Lokale Kalender der App: nicht anzeigen (ihre Termine bleiben gespeichert). */
-    private fun lokaleAusblenden(c: Context) {
+    fun lokaleAusblenden(c: Context) {
         val config = c.config
         val lokal = lokaleIds(c)
         if (config.displayCalendars.any { it in lokal }) config.displayCalendars = config.displayCalendars - lokal
@@ -171,7 +194,6 @@ object RosenwegNextcloud {
      * Nextcloud-Standardkalender statt dessen. null = so lassen.
      */
     fun standardStatt(c: Context, kalender: List<CalendarEntity>, id: Long): Long? {
-        if (!nurNextcloud(c)) return null
         val k = kalender.firstOrNull { it.id == id }
         if (k != null && k.caldavCalendarId in ids(c) && beschreibbar(c, k.caldavCalendarId)) return null
         val std = kalender.firstOrNull { it.id == c.config.defaultCalendarId && it.caldavCalendarId in ids(c) }

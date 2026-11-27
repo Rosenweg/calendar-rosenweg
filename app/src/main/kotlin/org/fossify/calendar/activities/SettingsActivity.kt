@@ -352,6 +352,8 @@ class SettingsActivity : SimpleActivity() {
     }
 
     private fun setupAllowCreatingTasks() = binding.apply {
+        // Rosenweg: keine (lokalen) Aufgaben
+        settingsAllowCreatingTasksHolder.beGone()
         settingsAllowCreatingTasks.isChecked = config.allowCreatingTasks
         settingsAllowCreatingTasksHolder.setOnClickListener {
             settingsAllowCreatingTasks.toggle()

@@ -330,7 +330,8 @@ class Config(context: Context) : BaseConfig(context) {
             .apply()
 
     var allowCreatingTasks: Boolean
-        get() = prefs.getBoolean(ALLOW_CREATING_TASKS, true)
+        // Rosenweg: Aufgaben gibt es nur in lokalen Kalendern (kein VTODO-Abgleich) - die App hat keine
+        get() = false
         set(allowCreatingTasks) = prefs.edit().putBoolean(ALLOW_CREATING_TASKS, allowCreatingTasks)
             .apply()
 
